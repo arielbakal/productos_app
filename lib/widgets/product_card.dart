@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
+import 'dart:io';
 
 class ProductCard extends StatelessWidget {
 
   final Product product;
-
+  
   const ProductCard(
     {Key? key, 
-    required this.product
+    required this.product,
     }) : super(key: key);
   
   @override
@@ -170,19 +171,37 @@ class _BackgroundImage extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 400,
-        child: 
-          url == null
-          ? Image( 
-            image: AssetImage('assets/no-image.png'),
-            fit: BoxFit.cover
-            )
-          : FadeInImage(
-              placeholder: AssetImage('assets/jar-loading.gif'), 
-              image: NetworkImage(url!),
-              fit: BoxFit.cover
-            )
+        child: getImage(url)
       
       ),
     );
   }
+
+  Widget getImage( String? picture ) {
+
+    if ( picture == null ) {
+      return  Image( 
+                  image: AssetImage('assets/no-image.png'),
+                  fit: BoxFit.cover,  
+              );
+    }
+    
+            
+    if ( picture.startsWith('http') ) {
+      return FadeInImage(
+                image: NetworkImage(url!),
+                placeholder: AssetImage('assets/jar-loading.gif'),
+                fit: BoxFit.cover
+              );
+    }
+    
+    
+    return Image.file(
+      File( picture ),
+      fit: BoxFit.cover
+    );
+
+
+  }
 }
+
