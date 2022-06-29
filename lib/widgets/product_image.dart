@@ -28,7 +28,7 @@ class ProductImage extends StatelessWidget {
   }
 
   BoxDecoration _buildBoxDecoration() => const BoxDecoration(
-    color: Colors.red,
+    color: Colors.black12,
     borderRadius: BorderRadius.only( topLeft: Radius.circular(45), topRight: Radius.circular(45)),
     boxShadow: [
       BoxShadow(
