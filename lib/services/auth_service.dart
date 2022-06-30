@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http; 
 
@@ -7,6 +8,10 @@ class AuthService extends ChangeNotifier {
 
   final String _baseUrl = 'identitytoolkit.googleapis.com';
   final String _firebaseToken = 'AIzaSyDBSFz4NSDQWNJrk8nuCRQ3gHeUkKwUh44';
+
+
+  final storage = new FlutterSecureStorage();
+
 
   Future<String?> createUser( String email, String password ) async {
 
@@ -23,6 +28,8 @@ class AuthService extends ChangeNotifier {
     final Map<String, dynamic> decodedResp = json.decode( resp.body );
 
     if ( decodedResp.containsKey('idToken') ) {
+
+      await storage.write(key: 'token', value: decodedResp['idToken']);
 
       return null;
     } else {
@@ -47,11 +54,27 @@ class AuthService extends ChangeNotifier {
 
     if ( decodedResp.containsKey('idToken') ) {
 
+      await storage.write(key: 'token', value: decodedResp['idToken']);
+
       return null;
     } else {
       return decodedResp['error']['message'];
     }
 
   }
+
+  Future logout() async {
+
+    await storage.delete(key: 'token');
+
+    return;
+  }
+
+  Future<String> readToken() async {
+
+    return await storage.read(key: 'token') ?? '';
+    
+  }
+
 
 }
